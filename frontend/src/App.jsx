@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import ProductForm from './pages/ProductFormPage'
 import ProductPage from './pages/ProductPage'
+import NotFound from './pages/NotFound'
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Route path="/product" element={<ProductPage/>}/>
       <Route path="/product/new" element={<ProductForm/>}/>      
       <Route path="/product/1/edit" element={<ProductForm/>}/>       
+      <Route path="*" element={<NotFound/>}/>       
 
     </Routes>
   )

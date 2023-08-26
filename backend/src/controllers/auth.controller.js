@@ -21,7 +21,8 @@ export const signin = async (req, res, next) => {
     const token = await createAccessToken({ id: result.rows[0].id })
 
     res.cookie('token', token, {
-        httpOnly: true,
+        // httpOnly: true,
+        secure:true,
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
@@ -30,17 +31,18 @@ export const signin = async (req, res, next) => {
 
 export const signup = async (req, res, next) => {
 
-    const { name, email, password } = req.body
+    const { email, password } = req.body
 
     try {
         const hashPass = await bcrypt.hash(password, 15);
 
-        const result = await pool.query('INSERT INTO users(name,email,password,role) VALUES($1,$2,$3,$4) RETURNING *;', [name, email, hashPass, 1]);
+        const result = await pool.query('INSERT INTO users(email,password,role) VALUES($1,$2,$3) RETURNING *;', [email, hashPass, 1]);
 
         const token = await createAccessToken({ id: result.rows[0].id })
 
         res.cookie('token', token, {
-            httpOnly: true,
+            // httpOnly: true,
+            secure:true,
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         })
         return res.json({ "data": result.rows[0] });
