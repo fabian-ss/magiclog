@@ -1,9 +1,14 @@
-import { Buttom, Card, Input, Label } from "../components/ui";
+import { Buttom, Card, Input, Label } from "../../components/ui";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useRegisterMutation  } from "../../api/apiSlice";
+import { useState } from "react";
 
-function RegisterPage() {
+
+function Register() {
+
+  const [message,setMessage] = useState("")
+  const [registerUser] = useRegisterMutation()
 
   const {
     register,
@@ -13,11 +18,14 @@ function RegisterPage() {
   } = useForm()
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    const response = await axios.post('http://localhost:3000/api/signup', data, {
-      withCredentials: true
-    });
-    console.log(response);
+
+    console.log("data",data);
+    await registerUser(data).then((res)=>{
+      if (res?.error?.status === 409) {setMessage("Este correo ya esta registrado")}
+      console.log(res);
+    }).catch((e)=>{
+      console.log("Error",e);
+    })
   });
 
   return (
@@ -27,6 +35,20 @@ function RegisterPage() {
         <form onSubmit={onSubmit} className="flex flex-col justify-center items-center">
 
           <div>
+
+          <Label>Nombre</Label>
+            <Input type="text" placeholder="nombre"{...register('name', {
+          required: {
+            value: true,
+            message: "El nombre es requerido"
+          },
+          maxLength: {
+            value: 255,
+            message: "No puede exeder de 255 carácteres"
+          }
+        })} />
+            {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+
             <Label>Correo</Label>
             <Input type="email" placeholder="name@mail.com"{...register('email', {
           required: {
@@ -43,6 +65,7 @@ function RegisterPage() {
           },
         })} />
             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+            {message !== "" ? <p className="text-red-500 pl-1">{message}</p> : null}
 
             <Label>Contraseña</Label>
             <Input type="password" placeholder="Enter Password"  {...register('password', {
@@ -96,4 +119,4 @@ function RegisterPage() {
   )
 }
 
-export default RegisterPage
+export default Register

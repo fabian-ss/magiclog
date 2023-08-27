@@ -1,6 +1,8 @@
-export function Label({children, htmlFor}) {
+export function Label({children, htmlFor,style}) {
   return (
-    <label className="block text-sm font-medium text-gray-400 mt-4" htmlFor={htmlFor}>
+    <label 
+    className={style || "block text-sm font-medium text-gray-400 mt-4"}
+    htmlFor={htmlFor}>
         {children}
     </label>
   )

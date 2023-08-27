@@ -1,23 +1,30 @@
 import { Link } from "react-router-dom"
-import { Card, Label, Input,Buttom } from "../components/ui"
+import { Card, Label, Input,Buttom } from "../../components/ui"
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useSigninMutation  } from "../../api/apiSlice";
+import { useState } from "react";
 
-function LoginPage() {
+function Login() {
+
+  const [message,setMessage] = useState("");
+  const [signin] = useSigninMutation();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    const response = await axios.post('http://localhost:3000/api/signin', data, {
-      withCredentials: true
+    await signin(data)
+    .then((res)=>{
+      if (res?.error?.status === 404) 
+      {setMessage(res.error.data.msg)}
+    }).catch((e)=>{
+      console.log("Error",e);
     });
-    console.log(response);
   });
 
   return (
@@ -37,8 +44,11 @@ function LoginPage() {
             value: true,
             message: "El correo es requerido"
           }
-            })} ></Input>
-          <Label htmlFor="email">
+            })} />
+            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+            {message !== "" ? <p className="text-red-500 pl-1">{message}</p> : null}
+
+          <Label htmlFor="password">
             Password
           </Label>
           <Input type="password" placeholder="*****" {...register('password', {
@@ -46,7 +56,8 @@ function LoginPage() {
             value: true,
             message: "La contraseña es requerida"
           },
-            })} ></Input>
+            })} />
+          {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
 
           <Buttom>
@@ -70,4 +81,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default Login

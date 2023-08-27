@@ -1,6 +1,14 @@
+import Register  from '../components/auth/Register'
+import Login  from '../components/auth/Login'
+
 function HomePage() {
+
   return (
-    <div className="bg-black text-white">HomePage</div>
+    <div>
+      <Register/>
+      <Login/>      
+    </div>
+
   )
 }
 
