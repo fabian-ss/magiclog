@@ -9,6 +9,7 @@ function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
+    watch
   } = useForm()
 
   const onSubmit = handleSubmit(async (data) => {
@@ -20,7 +21,7 @@ function RegisterPage() {
   });
 
   return (
-    <div className="h-screen flex justify-center items-center bg-red-700">
+    <div className="h-screen flex justify-center items-center">
       <Card>
         <h1 className="text-3xl font-semibold text-center pb-10">Crea una cuenta</h1>
         <form onSubmit={onSubmit} className="flex flex-col justify-center items-center">
@@ -28,22 +29,54 @@ function RegisterPage() {
           <div>
             <Label>Correo</Label>
             <Input type="email" placeholder="name@mail.com"{...register('email', {
-              required: true
-            })} />
-            {errors.email && <p className="text-red-500">El correo es requerido</p>}
+          required: {
+            value: true,
+            message: "El correo es requerido"
+          },
+          maxLength: {
+            value: 255,
+            message: "No puede exeder de 255 carácteres"
+          },          
+          pattern: {
+            value: /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+            message: "Correo no valido"
+          },
+        })} />
+            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
             <Label>Contraseña</Label>
             <Input type="password" placeholder="Enter Password"  {...register('password', {
-              required: true
+          required: {
+            value: true,
+            message: "La contraseña es requerida"
+          },
+          maxLength: {
+            value: 255,
+            message: "No puede exeder de 255 carácteres"
+          },
+          pattern: {
+            value: /^(?=.*[!@#$%^&*])/,
+            message: "La contraseña requiere un carácter"
+          },
+          validate:{
+            length: (value) => value && value.length >= 6 || 'La contraseña debe tener minimo 6 carácteres',
+            digits: (value) => value && /\d/.test(value) || 'La contraseña debe tener un número',
+            upper: (value) => value && /(?=.*[A-Z])/.test(value) || 'La contraseña debe tener una mayúscula',
+            lower: (value) => value && /(?=.*[a-z])/.test(value) || 'La contraseña debe tener una minúscula',            
+          }
             })} />
-            {errors.password && <p className="text-red-500">La contraseña es requerida</p>}
+            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
 
             <Label>Confirmar contraseña</Label>
 
-            <Input type="password" placeholder="Enter Password"  {...register('password', {
-              required: true
+            <Input type="password" placeholder="Enter Password"  {...register('confirmPassword', {
+                required: {
+                  value: true,
+                  message: "Se requiere confirmar la contraseña"
+                },
+                validate: value => value === watch('password') || 'Las contraseñas no coinciden'
             })} />
-            {errors.password && <p className="text-red-500">Las contraseñas no coinciden</p>}
+            {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
 
           </div>
 

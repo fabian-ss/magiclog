@@ -33,13 +33,19 @@ function LoginPage() {
             Email
           </Label>
           <Input type="email" placeholder="name@mail.com" {...register('email', {
-              required: true
+            required: {
+            value: true,
+            message: "El correo es requerido"
+          }
             })} ></Input>
           <Label htmlFor="email">
             Password
           </Label>
           <Input type="password" placeholder="*****" {...register('password', {
-              required: true
+            required: {
+            value: true,
+            message: "La contraseña es requerida"
+          },
             })} ></Input>
           </div>
 
