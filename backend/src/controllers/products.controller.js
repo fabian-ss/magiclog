@@ -4,11 +4,14 @@ export const getProducts = async (req, res, next) => {
 
     const result = await pool.query('SELECT * FROM products')
 
+    console.log("ddd");
+
     if (result.rowCount === 0) {
-        return res.json({ "data": 0 });
+        return res.json([{ "data": 0 }]);
     } else {
         return res.json(result.rows);
     }
+    next()
 
 };
 
