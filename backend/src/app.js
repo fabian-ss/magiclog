@@ -1,7 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
-import { badrequest, notFound,welcome } from './middlewares/handle_error.js';
+import { badrequest, notFound } from './middlewares/handle_error.js';
 import productsRoutes from "./routes/products.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import cors from 'cors'
