@@ -11,7 +11,6 @@ export const getProducts = async (req, res, next) => {
     } else {
         return res.json(result.rows);
     }
-    next()
 
 };
 
