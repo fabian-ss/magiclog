@@ -9,47 +9,72 @@ export const signin = async (req, res, next) => {
     const result = await pool.query('SELECT * FROM users WHERE email=$1;', [email])
 
     if (result.rowCount === 0) {
-        return res.status(400).json({ "msg": "unregistered mail" });
+        return res.status(404).json({ "msg": "El correo no existe" });
     }
 
     const confirmpass = await bcrypt.compare(password, result.rows[0].password)
 
     if (!confirmpass) {
-        return res.status(408).json({ "msg": "Wrong password" });
+        return res.status(404).json({ "msg": "Contraseña incorrecta" });
     }
 
-    const token = await createAccessToken({ id: result.rows[0].id })
+    const token = await createAccessToken(
+        {
+            id: result.rows[0].id,
+            name: result.rows[0].name,
+            email: result.rows[0].email,
+            role: result.rows[0].role === 0 ? 'administrador' : 'vendedor'
+        }
+    )
 
+    console.log(token);
     res.cookie('token', token, {
         // httpOnly: true,
-        secure:true,
+        secure: true,
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
-    return res.json({ "data": result.rows[0] });
+    console.log(data);
+    return res.json({ success: true });
 };
 
 export const signup = async (req, res, next) => {
 
-    const { email, password } = req.body
+    const { email, password, name } = req.body
 
     try {
         const hashPass = await bcrypt.hash(password, 15);
 
-        const result = await pool.query('INSERT INTO users(email,password,role) VALUES($1,$2,$3) RETURNING *;', [email, hashPass, 1]);
+        const result = await pool.query('INSERT INTO users(email,password,name,role) VALUES($1,$2,$3,$4) RETURNING *;', [email, hashPass, name, 1]);
 
-        const token = await createAccessToken({ id: result.rows[0].id })
+        // const token = await createAccessToken({ id: result.rows[0].id })
+
+        const token = await createAccessToken(
+            {
+                id: result.rows[0].id,
+                name: result.rows[0].name,
+                email: result.rows[0].email,
+                role: result.rows[0].role === 0 ? 'administrador' : 'vendedor'
+            }
+        )
 
         res.cookie('token', token, {
             // httpOnly: true,
-            secure:true,
+            secure: true,
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         })
-        return res.json({ "data": result.rows[0] });
+
+        const data = {
+            id: result.rows[0].id,
+            email: result.rows[0].email
+        }
+
+        console.log(data);
+        return res.json({ success: true });
 
     } catch (error) {
         if (error.code == "23505") {
-            return res.status(409).json({ "msg": "registered email" });
+            return res.status(409).json({ "msg": "Este correo ya esta registrado" });
         }
         next(error)
     }
@@ -66,7 +91,7 @@ export const logout = async (req, res, next) => {
 export const salesman = async (req, res, next) => {
 
     const result = await pool.query('SELECT id, "role", "name",email FROM users;')
-    
+
     if (result.rowCount === 0) {
         return res.json({ "msg": "No registered users" });
     }

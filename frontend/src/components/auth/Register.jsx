@@ -1,15 +1,15 @@
 import { Buttom, Card, Input, Label } from "../../components/ui";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link,  } from "react-router-dom";
 import { useRegisterMutation  } from "../../api/apiSlice";
 import { useState } from "react";
+import toast from 'react-hot-toast';
+import Notifications from "../notifications/Notificacion";
 
-
-function Register() {
+function Register({...props}) {
 
   const [message,setMessage] = useState("")
   const [registerUser] = useRegisterMutation()
-
   const {
     register,
     handleSubmit,
@@ -17,12 +17,28 @@ function Register() {
     watch
   } = useForm()
 
+
+  const handleRegister = ()=>{
+    props.setRegister(false)
+  } 
+
+  const notify = (customText) => toast.custom((t) => (
+    <Notifications customText={customText} t={t}/>
+  ))
+
   const onSubmit = handleSubmit(async (data) => {
 
     console.log("data",data);
     await registerUser(data).then((res)=>{
-      if (res?.error?.status === 409) {setMessage("Este correo ya esta registrado")}
-      console.log(res);
+      if (res?.error?.status === 409) {
+        setMessage(res.error.data.msg)
+        notify(res.error.data.msg)
+    } else{
+      props.setLogin(false)
+      props.setRegister(false)    
+      window.location.reload()
+
+    }
     }).catch((e)=>{
       console.log("Error",e);
     })
@@ -58,10 +74,6 @@ function Register() {
           maxLength: {
             value: 255,
             message: "No puede exeder de 255 carácteres"
-          },          
-          pattern: {
-            value: /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-            message: "Correo no valido"
           },
         })} />
             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
@@ -103,14 +115,15 @@ function Register() {
 
           </div>
 
-          <Buttom>
+          <Buttom  type="button">
             REGISTRARSE
           </Buttom>
 
-            
-            <Link to="/login" className="text-blue-800 pt-3 underline underline-offset-4">
-            Inicia sesión 
-            </Link>
+          <button onClick={handleRegister}  type="button">
+              <p className="text-blue-800 pt-3 underline underline-offset-4">
+              Inicia sesión
+              </p>
+          </button>
 
         </form>
 

@@ -2,10 +2,10 @@ import { pool } from '../db.js'
 
 export const getProducts = async (req, res, next) => {
 
-    const result = await pool.query('SELECT * FROM products WHERE user_id=$1;',[req.userId])
+    const result = await pool.query('SELECT * FROM products')
 
     if (result.rowCount === 0) {
-        return res.json({ "msg": "No registered products" });
+        return res.json({ "data": 0 });
     } else {
         return res.json(result.rows);
     }
@@ -48,7 +48,7 @@ export const createProduct = async (req, res, next) => {
     } catch (error) {
 
         if (error.code == "23505") {
-            return res.status(409).json({ "msg": "registered sku" });
+            return res.status(409).json({ "msg": "Ese Sku ya esta registrado" });
         }
         next(error)
     }

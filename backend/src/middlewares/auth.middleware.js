@@ -8,7 +8,7 @@ export const isAuth = (req, res, next) => {
 
     if (!token) {
         return res.status(401).json({
-            message: 'unauthorized'
+            message: 'No tienes permisos para realizar esta operación'
         });
     };
 
@@ -31,7 +31,7 @@ export const isAdmin = async (req, res, next) => {
 
         if (data.rows[0].role !== 0) {
             return res.status(401).json({
-                message: 'unauthorized'
+                message: 'No tienes permisos para realizar esta operación'
             });
         };
         

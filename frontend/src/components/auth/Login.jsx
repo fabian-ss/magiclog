@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom"
 import { Card, Label, Input,Buttom } from "../../components/ui"
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useSigninMutation  } from "../../api/apiSlice";
 import { useState } from "react";
+import toast from 'react-hot-toast';
+import Notificacion from "../notifications/Notificacion";
 
-function Login() {
+function Login({...props}) {
 
   const [message,setMessage] = useState("");
   const [signin] = useSigninMutation();
+
+  // qwerty1#Q
 
   const {
     register,
@@ -16,12 +18,23 @@ function Login() {
     formState: { errors },
   } = useForm();
 
+  const notify = (customText) => toast.custom((t) => (
+    <Notificacion customText={customText} t={t}/>
+  ))
+  
+  const handleLogin = ()=>{
+    props.setRegister(true)
+  }
 
   const onSubmit = handleSubmit(async (data) => {
-    await signin(data)
-    .then((res)=>{
-      if (res?.error?.status === 404) 
-      {setMessage(res.error.data.msg)}
+    await signin(data).then((res)=>{
+      if (res?.error?.status === 404) {
+        setMessage(res.error.data.msg)
+        notify(res.error.data.msg)
+      } else{
+        window.location.reload()
+        props.setLogin(false)
+      }
     }).catch((e)=>{
       console.log("Error",e);
     });
@@ -60,7 +73,7 @@ function Login() {
           {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
 
-          <Buttom>
+          <Buttom  type="button">
             Iniciar sesión
           </Buttom>
 
@@ -68,11 +81,12 @@ function Login() {
             <p>
               ¿No tienes cuenta?
             </p>
-              <Link to="/register" className="font-bold pl-2">
+            <button onClick={handleLogin}  type="button">
+              <p className="font-bold pl-2">
                  Registar 
-              </Link>
+              </p>
+            </button>
           </div>
-
         </form>
 
       </Card>
