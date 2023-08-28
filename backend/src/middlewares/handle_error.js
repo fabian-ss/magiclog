@@ -11,3 +11,7 @@ export const notFound = (req, res, next) => {
         message: "something wrong or page doesnt exist"
     })
 }
+
+export const welcome = (req, res, next) => {
+    res.status(200).json({'message':"MagicLog API"})
+}
