@@ -7,13 +7,13 @@ import authRoutes from "./routes/auth.routes.js";
 import cors from 'cors'
 
 // Dot env
-import './config.js'
+import {ORIGIN} from './config.js'
 
 const app = express();
 
 // Middlewares
 app.use(cors({ 
-    origin:'http://localhost:5173',
+    origin:ORIGIN,
     credentials:true
 }));
 app.use(morgan('dev'));

@@ -10,3 +10,5 @@ export const DB_PASSWORD = process.env.DB_PASSWORD
 export const DB_DATABASE = process.env.DB_DATABASE
 export const JWTEXPIRE = process.env.JWTEXPIRE
 export const JWTPHRASE = process.env.JWTPHRASE
+
+export const ORIGIN = process.env.ORIGIN
