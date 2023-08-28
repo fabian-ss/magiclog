@@ -29,12 +29,12 @@ export const signin = async (req, res, next) => {
 
     console.log(token);
     res.cookie('token', token, {
-        sameSite:false,
+        secure:true,
+        sameSite:true,
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
-    console.log(data);
-    return res.json({ success: true });
+    return res.json(token);
 };
 
 export const signup = async (req, res, next) => {
@@ -46,7 +46,6 @@ export const signup = async (req, res, next) => {
 
         const result = await pool.query('INSERT INTO users(email,password,name,role) VALUES($1,$2,$3,$4) RETURNING *;', [email, hashPass, name, 1]);
 
-        // const token = await createAccessToken({ id: result.rows[0].id })
 
         const token = await createAccessToken(
             {
@@ -58,17 +57,12 @@ export const signup = async (req, res, next) => {
         )
 
         res.cookie('token', token, {
-            sameSite:false,
+            secure:true,
+            sameSite:true,
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         })
 
-        const data = {
-            id: result.rows[0].id,
-            email: result.rows[0].email
-        }
-
-        console.log(data);
-        return res.json({ success: true });
+        return res.json(token);
 
     } catch (error) {
         if (error.code == "23505") {

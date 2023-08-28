@@ -25,11 +25,9 @@ function HomePage() {
   const [ctrlInventario, setCtrlInventario] = useState(false)
 
   useEffect(() => {
-    console.log("ssss");
-    console.log(Cookie.get('/token'));
-    if (Cookie.get('token')) {
-      console.log("isAuth", jwt_decode(Cookie.get('token')))
-      setToken(jwt_decode(Cookie.get('token')))
+    if (localStorage.getItem("token")) {
+      setToken(jwt_decode(
+        localStorage.getItem("token")))
     }
   }, [])
 

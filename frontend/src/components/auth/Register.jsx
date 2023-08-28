@@ -48,6 +48,7 @@ function Register({...props}) {
         setMessage(res.error.data.msg)
         notify(res.error.data.msg)
     } else{
+      localStorage.setItem("token", res.data)
       props.setLogin(false)
       props.setRegister(false)    
       window.location.reload()

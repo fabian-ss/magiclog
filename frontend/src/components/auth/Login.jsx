@@ -1,5 +1,5 @@
 import { Card, Label, Input,Buttom } from "../../components/ui"
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useSigninMutation  } from "../../api/apiSlice";
 import { useState } from "react";
 import toast from 'react-hot-toast';
@@ -44,6 +44,7 @@ function Login({...props}) {
         setMessage(res.error.data.msg)
         notify(res.error.data.msg)
       } else{
+        localStorage.setItem("token", res.data)
         window.location.reload()
         props.setLogin(false)
       }
