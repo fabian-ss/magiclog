@@ -11,4 +11,4 @@ export const DB_DATABASE = process.env.DB_DATABASE
 export const JWTEXPIRE = process.env.JWTEXPIRE
 export const JWTPHRASE = process.env.JWTPHRASE
 
-export const ORIGIN = process.env.ORIGIN
+export const ORIGIN = process.env.ORIGIN || 'http://localhost:5173'; 

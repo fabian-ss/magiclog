@@ -51,7 +51,6 @@ function Register({...props}) {
       props.setLogin(false)
       props.setRegister(false)    
       window.location.reload()
-
     }
     }).catch((e)=>{
       console.log("Error",e);

@@ -27,6 +27,8 @@ function HomePage() {
 
 
   useEffect(() => {
+    console.log("ssss");
+    console.log(Cookie.get('token'));
     if (Cookie.get('token')) {
       console.log("isAuth", jwt_decode(Cookie.get('token')))
       setToken(jwt_decode(Cookie.get('token')))

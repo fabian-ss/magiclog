@@ -41,7 +41,6 @@ function ProductForm() {
       if (res?.error?.status === 401) {
         notify(res.error.data.message)
         const timer = setTimeout(() => window.location.reload(), 6000);
-
       } else {
         props.setLogin(false)
         props.setRegister(false)

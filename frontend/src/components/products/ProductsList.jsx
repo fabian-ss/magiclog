@@ -9,10 +9,7 @@ function ProductsList({...props}) {
   const [textInput,setTextInput] = useState('')
   const [show,setShow] = useState(false)
 
-
-  const [preload,setPreload] =  useState(products===undefined ? [{}] : products )
-
-  const filtered = preload.filter(product => {
+  const filtered = products.filter(product => {
 
     return (product.price >= props.minNumber && product.price <= props.sliceValue && product.price > 0 && (product.name.includes(textInput) || product.sku.includes(textInput)) && product.count > 0 );
     })
