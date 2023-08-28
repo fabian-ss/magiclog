@@ -23,8 +23,6 @@ function HomePage() {
   const [token, setToken] = useState(null)
   const [ctrlProducts, setCtrlProducts] = useState(true)
   const [ctrlInventario, setCtrlInventario] = useState(false)
-  const [ctrlSalesman, setCtrlSalesman] = useState(false)
-
 
   useEffect(() => {
     console.log("ssss");
